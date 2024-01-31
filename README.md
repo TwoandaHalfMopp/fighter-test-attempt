@@ -1,0 +1,1 @@
+Attempt at making a fighting game in godot. I had most of the stuff working to some extent, but I consider this project obsolete as it wasn't built with networking support in mind. Leaving it up here for other people to study
