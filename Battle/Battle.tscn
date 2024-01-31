@@ -1,0 +1,252 @@
+[gd_scene load_steps=20 format=3 uid="uid://bfqdi1mjlebca"]
+
+[ext_resource type="Script" path="res://battle/HUD Assets.gd" id="1_bb2t7"]
+[ext_resource type="Script" path="res://battle/Battle.gd" id="1_xshcq"]
+[ext_resource type="Script" path="res://battle/CameraController.gd" id="2_u2kca"]
+[ext_resource type="PackedScene" uid="uid://cte3r13lnyv0" path="res://Characters/TestCharacter/test_character.tscn" id="3_2r14s"]
+
+[sub_resource type="Gradient" id="Gradient_te6xw"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_k4qyr"]
+gradient = SubResource("Gradient_te6xw")
+width = 507
+height = 32
+
+[sub_resource type="Gradient" id="Gradient_40i2h"]
+colors = PackedColorArray(1, 0, 0, 1, 0.45098, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mbaci"]
+gradient = SubResource("Gradient_40i2h")
+width = 507
+height = 32
+
+[sub_resource type="Gradient" id="Gradient_poou6"]
+colors = PackedColorArray(0.45098, 0, 0, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_5867v"]
+gradient = SubResource("Gradient_poou6")
+width = 507
+height = 32
+
+[sub_resource type="Gradient" id="Gradient_5rn7f"]
+colors = PackedColorArray(0, 1, 1, 1, 0, 0.470588, 0.470588, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pmp57"]
+gradient = SubResource("Gradient_5rn7f")
+width = 507
+height = 32
+
+[sub_resource type="Gradient" id="Gradient_bn24x"]
+colors = PackedColorArray(0, 0.470588, 0.470588, 1, 0, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_u81oi"]
+gradient = SubResource("Gradient_bn24x")
+width = 507
+height = 32
+
+[sub_resource type="SphereMesh" id="SphereMesh_032qr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nvrsn"]
+size = Vector3(20, 1, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jf3x0"]
+size = Vector3(1, 10, 5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hdxpp"]
+size = Vector3(20, 1, 5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vo0eg"]
+size = Vector3(1, 10, 5)
+
+[node name="Battle" type="Node3D"]
+script = ExtResource("1_xshcq")
+TestCharacter = ExtResource("3_2r14s")
+
+[node name="Stage" type="Node3D" parent="."]
+
+[node name="HUD Assets" type="Control" parent="Stage"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+script = ExtResource("1_bb2t7")
+
+[node name="P1HealthBar" type="TextureProgressBar" parent="Stage/HUD Assets"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 517.0
+offset_bottom = 42.0
+value = 75.0
+fill_mode = 1
+texture_under = SubResource("GradientTexture2D_k4qyr")
+texture_progress = SubResource("GradientTexture2D_mbaci")
+
+[node name="P1HealthLabel" type="Label" parent="Stage/HUD Assets"]
+layout_mode = 0
+offset_left = 465.0
+offset_top = 10.0
+offset_right = 517.0
+offset_bottom = 42.0
+text = "75 "
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="P2HealthBar" type="TextureProgressBar" parent="Stage/HUD Assets"]
+layout_mode = 0
+offset_left = 635.0
+offset_top = 10.0
+offset_right = 1142.0
+offset_bottom = 42.0
+value = 75.0
+texture_under = SubResource("GradientTexture2D_k4qyr")
+texture_progress = SubResource("GradientTexture2D_5867v")
+
+[node name="P2HealthLabel" type="Label" parent="Stage/HUD Assets"]
+layout_mode = 0
+offset_left = 635.0
+offset_top = 10.0
+offset_right = 687.0
+offset_bottom = 42.0
+text = " 75"
+vertical_alignment = 1
+
+[node name="P1SuperBar" type="TextureProgressBar" parent="Stage/HUD Assets"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 606.0
+offset_right = 517.0
+offset_bottom = 638.0
+value = 75.0
+fill_mode = 1
+texture_under = SubResource("GradientTexture2D_k4qyr")
+texture_progress = SubResource("GradientTexture2D_pmp57")
+
+[node name="P1SuperLabel" type="Label" parent="Stage/HUD Assets"]
+layout_mode = 0
+offset_left = 465.0
+offset_top = 606.0
+offset_right = 517.0
+offset_bottom = 638.0
+text = "75 "
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="P2SuperBar" type="TextureProgressBar" parent="Stage/HUD Assets"]
+layout_mode = 0
+offset_left = 635.0
+offset_top = 606.0
+offset_right = 1142.0
+offset_bottom = 638.0
+value = 75.0
+texture_under = SubResource("GradientTexture2D_k4qyr")
+texture_progress = SubResource("GradientTexture2D_u81oi")
+
+[node name="P2SuperLabel" type="Label" parent="Stage/HUD Assets"]
+layout_mode = 0
+offset_left = 635.0
+offset_top = 606.0
+offset_right = 687.0
+offset_bottom = 638.0
+text = " 75"
+vertical_alignment = 1
+
+[node name="CameraController" type="Node3D" parent="Stage"]
+script = ExtResource("2_u2kca")
+
+[node name="Label" type="Label" parent="Stage/CameraController"]
+offset_left = 292.0
+offset_top = 74.0
+offset_right = 332.0
+offset_bottom = 126.0
+text = "P1: 0
+P2: 0"
+
+[node name="CameraControllerVisualizer" type="MeshInstance3D" parent="Stage/CameraController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("SphereMesh_032qr")
+skeleton = NodePath("../MidpointVisualizer")
+
+[node name="MidpointVisualizer" type="MeshInstance3D" parent="Stage/CameraController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("SphereMesh_032qr")
+
+[node name="BGCamera" type="Camera3D" parent="Stage/CameraController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00451756, 1.29126, 8.56246)
+cull_mask = 1047554
+current = true
+fov = 50.0
+size = 15.0
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Stage/CameraController/BGCamera"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -384.0
+offset_top = -216.0
+offset_right = 384.0
+offset_bottom = 216.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="Stage/CameraController/BGCamera/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="MainCamera" type="Camera3D" parent="Stage/CameraController/BGCamera/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.30301, 6.09229)
+cull_mask = 1048573
+projection = 1
+current = true
+size = 12.0
+
+[node name="Floor" type="StaticBody3D" parent="Stage"]
+collision_mask = 7
+
+[node name="FloorCollision" type="CollisionShape3D" parent="Stage/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_nvrsn")
+
+[node name="P1Wall" type="StaticBody3D" parent="Stage"]
+collision_mask = 7
+
+[node name="P1WallCollision" type="CollisionShape3D" parent="Stage/P1Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 4, 0)
+shape = SubResource("BoxShape3D_jf3x0")
+
+[node name="P2Wall" type="StaticBody3D" parent="Stage"]
+collision_mask = 7
+
+[node name="P2WallCollision" type="CollisionShape3D" parent="Stage/P2Wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 4, 0)
+shape = SubResource("BoxShape3D_jf3x0")
+
+[node name="StageVisuals" type="Node3D" parent="Stage"]
+
+[node name="FloorMesh" type="MeshInstance3D" parent="Stage/StageVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+layers = 2
+mesh = SubResource("BoxMesh_hdxpp")
+
+[node name="P1WallMesh" type="MeshInstance3D" parent="Stage/StageVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 4, 0)
+layers = 2
+mesh = SubResource("BoxMesh_vo0eg")
+
+[node name="P2WallMesh" type="MeshInstance3D" parent="Stage/StageVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 4, 0)
+layers = 2
+mesh = SubResource("BoxMesh_vo0eg")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Stage/StageVisuals"]
+transform = Transform3D(1, 0, 0, 0, 0.894654, 0.44676, 0, -0.44676, 0.894654, 0, 5.60579, 0)
+layers = 3
+
+[node name="P1Character" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 0)
+
+[node name="P2Character" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 0)

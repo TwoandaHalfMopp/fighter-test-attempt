@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PlayerControls" load_steps=2 format=3 uid="uid://cgep783ihffo3"]
+
+[ext_resource type="Script" path="res://battle/PlayerControls.gd" id="1_rpg2k"]
+
+[resource]
+script = ExtResource("1_rpg2k")
+player_index = 1
+Input_Left = "P2_Input_Left"
+Input_Right = "P2_Input_Right"
+Input_Up = "P2_Input_Up"
+Input_Up_Alt = "P2_Input_Up_Alt"
+Input_Down = "P2_Input_Down"
+Input_Button_A = "P2_Input_Button_A"
+Input_Button_B = "P2_Input_Button_B"
+Input_Button_C = "P2_Input_Button_C"
+Input_Button_D = "P2_Input_Button_D"

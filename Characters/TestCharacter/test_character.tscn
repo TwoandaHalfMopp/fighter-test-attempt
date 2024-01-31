@@ -1,0 +1,525 @@
+[gd_scene load_steps=19 format=3 uid="uid://cte3r13lnyv0"]
+
+[ext_resource type="Script" path="res://Characters/TestCharacter/test_character.gd" id="1_6ocyt"]
+[ext_resource type="PackedScene" uid="uid://davq5b50p2or8" path="res://Characters/Common/hitbox.tscn" id="2_ds2kx"]
+[ext_resource type="PackedScene" uid="uid://d0al67yvmhle1" path="res://Characters/TestCharacter/projectile_test.tscn" id="3_ofobj"]
+[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="4_47guq"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="5_b6gia"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="6_m5ua4"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="7_s77yv"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="8_fahl5"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/parallel_state.gd" id="9_08l6k"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_is_active_guard.gd" id="10_ehju6"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_mogat"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_shmh6"]
+points = PackedVector3Array(0, 0.4, -0.25, 0, 0.4, 0.25, 0.25, 0.125, 0.25, 0.25, 0.125, -0.25, -0.25, 0.125, -0.25, -0.25, 0.125, 0.25, 0.25, -0.125, 0.25, 0.25, -0.125, -0.25, -0.25, -0.125, -0.25, -0.25, -0.125, 0.25, 0, -0.4, -0.25, 0, -0.4, 0.25)
+
+[sub_resource type="Resource" id="Resource_1ijyq"]
+script = ExtResource("10_ehju6")
+state = NodePath("../../../../Attacks/Neutral")
+
+[sub_resource type="Resource" id="Resource_xttik"]
+script = ExtResource("10_ehju6")
+state = NodePath("../../../../Attacks/Neutral")
+
+[sub_resource type="Resource" id="Resource_c6b22"]
+script = ExtResource("10_ehju6")
+state = NodePath("../../../../Attacks/Neutral")
+
+[sub_resource type="Resource" id="Resource_qvqxu"]
+script = ExtResource("10_ehju6")
+state = NodePath("../../../../Attacks/Neutral")
+
+[sub_resource type="Resource" id="Resource_04yu1"]
+script = ExtResource("10_ehju6")
+state = NodePath("../../../../Attacks/Neutral")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sf2or"]
+radius = 0.65
+height = 1.65
+
+[node name="TestCharacter" type="CharacterBody3D"]
+collision_layer = 0
+collision_mask = 7
+script = ExtResource("1_6ocyt")
+hitbox = ExtResource("2_ds2kx")
+projectile = ExtResource("3_ofobj")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StateChartDebugger" parent="Control" instance=ExtResource("4_47guq")]
+layout_mode = 1
+offset_left = 14.0
+offset_top = 342.0
+offset_right = 386.0
+offset_bottom = 515.0
+enabled = false
+initial_node_to_watch = NodePath("../../StateChart")
+
+[node name="InputBufferChecker" type="Label" parent="Control"]
+visible = false
+layout_mode = 0
+offset_left = 731.0
+offset_top = 232.0
+offset_right = 1133.0
+offset_bottom = 299.0
+text = "???"
+
+[node name="InputVarDebug" type="Label" parent="Control"]
+visible = false
+layout_mode = 0
+offset_left = 696.0
+offset_top = 269.0
+offset_right = 844.0
+offset_bottom = 424.0
+text = "0
+0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_mogat")
+
+[node name="CollisionBox" type="CollisionShape3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.8, 0)
+shape = SubResource("ConvexPolygonShape3D_shmh6")
+
+[node name="StateChart" type="Node" parent="."]
+script = ExtResource("5_b6gia")
+
+[node name="Root" type="Node" parent="StateChart"]
+script = ExtResource("6_m5ua4")
+initial_state = NodePath("Control")
+
+[node name="React" type="Node" parent="StateChart/Root"]
+script = ExtResource("6_m5ua4")
+initial_state = NodePath("Hitstun")
+
+[node name="Hitstun" type="Node" parent="StateChart/Root/React"]
+script = ExtResource("7_s77yv")
+
+[node name="ToIdle" type="Node" parent="StateChart/Root/React/Hitstun"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../../Control/Movement/Grounded/Idle")
+event = &"movement_idle"
+
+[node name="ToAirborne" type="Node" parent="StateChart/Root/React/Hitstun"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../../Control/Movement/Airborne")
+event = &"movement_airborne"
+
+[node name="Control" type="Node" parent="StateChart/Root"]
+script = ExtResource("9_08l6k")
+
+[node name="Movement" type="Node" parent="StateChart/Root/Control"]
+script = ExtResource("6_m5ua4")
+initial_state = NodePath("Grounded")
+
+[node name="Grounded" type="Node" parent="StateChart/Root/Control/Movement"]
+script = ExtResource("6_m5ua4")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateChart/Root/Control/Movement/Grounded"]
+script = ExtResource("7_s77yv")
+
+[node name="ToCrouch" type="Node" parent="StateChart/Root/Control/Movement/Grounded/Idle"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Crouch")
+event = &"input_crouch"
+guard = SubResource("Resource_1ijyq")
+
+[node name="ToJumpSquat" type="Node" parent="StateChart/Root/Control/Movement/Grounded/Idle"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../JumpSquat")
+event = &"input_jump"
+guard = SubResource("Resource_xttik")
+
+[node name="Crouch" type="Node" parent="StateChart/Root/Control/Movement/Grounded"]
+script = ExtResource("7_s77yv")
+
+[node name="ToIdle" type="Node" parent="StateChart/Root/Control/Movement/Grounded/Crouch"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Idle")
+event = &"input_idle"
+guard = SubResource("Resource_c6b22")
+
+[node name="ToJumpSquat" type="Node" parent="StateChart/Root/Control/Movement/Grounded/Crouch"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../JumpSquat")
+event = &"input_jump"
+guard = SubResource("Resource_qvqxu")
+
+[node name="JumpSquat" type="Node" parent="StateChart/Root/Control/Movement/Grounded"]
+script = ExtResource("7_s77yv")
+
+[node name="ToAirborne" type="Node" parent="StateChart/Root/Control/Movement/Grounded/JumpSquat"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../../Airborne")
+event = &"movement_jump"
+guard = SubResource("Resource_04yu1")
+
+[node name="ToIdle" type="Node" parent="StateChart/Root/Control/Movement/Grounded/JumpSquat"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Idle")
+event = &"cancel_jumpsquat"
+
+[node name="Airborne" type="Node" parent="StateChart/Root/Control/Movement"]
+script = ExtResource("7_s77yv")
+
+[node name="ToIdle" type="Node" parent="StateChart/Root/Control/Movement/Airborne"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Grounded/Idle")
+event = &"movement_idle"
+
+[node name="ToHitstun" type="Node" parent="StateChart/Root/Control/Movement"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../../React/Hitstun")
+event = &"react_hitstun"
+
+[node name="Attacks" type="Node" parent="StateChart/Root/Control"]
+script = ExtResource("6_m5ua4")
+initial_state = NodePath("Neutral")
+
+[node name="Neutral" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToAttackA" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../AttackA")
+event = &"input_a"
+
+[node name="To AttackJA" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Attack JA")
+event = &"input_ja"
+
+[node name="toAttackB" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../AttackB")
+event = &"input_b"
+
+[node name="ToAttackC" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../AttackC")
+event = &"input_c"
+
+[node name="ToAttackD" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../AttackD")
+event = &"input_d"
+
+[node name="To Attack6A" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Attack 6A")
+event = &"input_6a"
+
+[node name="To AttackJ2B" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Attack J2B")
+event = &"input_j2b"
+
+[node name="ToSpecial236A" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special236A")
+event = &"input_236a"
+
+[node name="To Special J236A" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special J236A")
+event = &"input_j236a"
+
+[node name="ToSpecial214A" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special214A")
+event = &"input_214a"
+
+[node name="ToSpecial63214B" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special63214B")
+event = &"input_63214b"
+
+[node name="ToSpecial4X6B" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special4X6B")
+event = &"input_4x6b"
+
+[node name="ToSpecial2X8B" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special2X8B")
+event = &"input_2x8b"
+
+[node name="ToSpecial623C" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special623C")
+event = &"input_623c"
+
+[node name="ToSpecial41236C" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special41236C")
+event = &"input_41236c"
+
+[node name="ToSpecial22D" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Special22D")
+event = &"input_22d"
+
+[node name="ToSuper236236A" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Super236236A")
+event = &"input_236236a"
+
+[node name="ToSuper214214A" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Super214214A")
+event = &"input_214214a"
+
+[node name="ToSuper4X646B" type="Node" parent="StateChart/Root/Control/Attacks/Neutral"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Super4X646B")
+event = &"input_4x646b"
+
+[node name="AttackA" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/AttackA"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Attack JA" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Attack JA"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="AttackB" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/AttackB"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="AttackC" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/AttackC"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="AttackD" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/AttackD"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Attack 6A" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Attack 6A"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Attack J2B" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Attack J2B"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special236A" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special236A"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special J236A" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special J236A"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special214A" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special214A"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="ToFollowup236A" type="Node" parent="StateChart/Root/Control/Attacks/Special214A"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Followup214A236A")
+event = &"input_236a"
+
+[node name="Followup214A236A" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Followup214A236A"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special63214B" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special63214B"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special4X6B" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special4X6B"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special2X8B" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special2X8B"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special623C" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special623C"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special41236C" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special41236C"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Special22D" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Special22D"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Super236236A" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Super236236A"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Super214214A" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Super214214A"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="Super4X646B" type="Node" parent="StateChart/Root/Control/Attacks"]
+script = ExtResource("7_s77yv")
+
+[node name="ToNeutral" type="Node" parent="StateChart/Root/Control/Attacks/Super4X646B"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../Neutral")
+event = &"attack_neutral_return"
+
+[node name="ToHitstun" type="Node" parent="StateChart/Root/Control"]
+script = ExtResource("8_fahl5")
+to = NodePath("../../React/Hitstun")
+event = &"react_hitstun"
+
+[node name="ProjectileSpawner" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 0)
+
+[node name="PushBox" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="PushBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("CapsuleShape3D_sf2or")
+
+[connection signal="state_entered" from="StateChart/Root/React/Hitstun" to="." method="_on_hitstun_state_entered"]
+[connection signal="state_exited" from="StateChart/Root/React/Hitstun" to="." method="_on_hitstun_state_exited"]
+[connection signal="state_physics_processing" from="StateChart/Root/React/Hitstun" to="." method="_on_hitstun_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Movement/Grounded/Idle" to="." method="_on_idle_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Movement/Grounded/Idle" to="." method="_on_idle_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Movement/Grounded/Crouch" to="." method="_on_crouch_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Movement/Grounded/Crouch" to="." method="_on_crouch_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Movement/Grounded/JumpSquat" to="." method="_on_jump_squat_state_entered"]
+[connection signal="state_exited" from="StateChart/Root/Control/Movement/Grounded/JumpSquat" to="." method="_on_jump_squat_state_exited"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Movement/Grounded/JumpSquat" to="." method="_on_jump_squat_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Movement/Airborne" to="." method="_on_airborne_state_entered"]
+[connection signal="state_exited" from="StateChart/Root/Control/Movement/Airborne" to="." method="_on_airborne_state_exited"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Movement/Airborne" to="." method="_on_airborne_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Neutral" to="." method="_on_neutral_state_entered"]
+[connection signal="state_exited" from="StateChart/Root/Control/Attacks/Neutral" to="." method="_on_neutral_state_exited"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/AttackA" to="." method="_on_attack_a_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/AttackA" to="." method="_on_attack_a_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Attack JA" to="." method="_on_attack_ja_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Attack JA" to="." method="_on_attack_ja_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/AttackB" to="." method="_on_attack_b_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/AttackB" to="." method="_on_attack_b_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/AttackC" to="." method="_on_attack_c_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/AttackC" to="." method="_on_attack_c_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/AttackD" to="." method="_on_attack_d_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/AttackD" to="." method="_on_attack_d_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Attack 6A" to="." method="_on_attack_6a_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Attack 6A" to="." method="_on_attack_6a_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Attack J2B" to="." method="_on_attack_j_2b_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Attack J2B" to="." method="_on_attack_j_2b_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special236A" to="." method="_on_special_236a_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special236A" to="." method="_on_special_236a_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special J236A" to="." method="_on_special_j_236a_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special J236A" to="." method="_on_special_j_236a_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special214A" to="." method="_on_special_214a_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special214A" to="." method="_on_special_214a_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Followup214A236A" to="." method="_on_followup_214a_236a_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Followup214A236A" to="." method="_on_followup_214a_236a_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special63214B" to="." method="_on_special_63214b_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special63214B" to="." method="_on_special_63214b_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special4X6B" to="." method="_on_special_4x_6b_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special4X6B" to="." method="_on_special_4x_6b_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special2X8B" to="." method="_on_special_2x_8b_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special2X8B" to="." method="_on_special_2x_8b_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special623C" to="." method="_on_special_623c_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special623C" to="." method="_on_special_623c_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special41236C" to="." method="_on_special_41236c_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special41236C" to="." method="_on_special_41236c_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Special22D" to="." method="_on_special_22d_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Special22D" to="." method="_on_special_22d_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Super236236A" to="." method="_on_super_236236a_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Super236236A" to="." method="_on_super_236236a_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Super214214A" to="." method="_on_super_214214a_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Super214214A" to="." method="_on_super_214214a_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/Root/Control/Attacks/Super4X646B" to="." method="_on_super_4x_646b_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Root/Control/Attacks/Super4X646B" to="." method="_on_super_4x_646b_state_physics_processing"]
+[connection signal="area_entered" from="PushBox" to="." method="_on_push_box_area_entered"]
+[connection signal="area_exited" from="PushBox" to="." method="_on_push_box_area_exited"]

@@ -1,0 +1,108 @@
+[gd_scene load_steps=6 format=3 uid="uid://cjppsoheiqy73"]
+
+[ext_resource type="Script" path="res://battle/Input Visualizer.gd" id="1_rkhaq"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hg1fg"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ykmvx"]
+radius = 13.0
+height = 26.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_uwtvk"]
+radius = 26.0
+height = 52.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_0ljwv"]
+
+[node name="Input Visualizer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 274.0
+offset_bottom = 105.0
+script = ExtResource("1_rkhaq")
+
+[node name="Background" type="MeshInstance2D" parent="."]
+modulate = Color(0, 0, 0, 0.501961)
+position = Vector2(136.5, 52)
+scale = Vector2(273, 104)
+mesh = SubResource("BoxMesh_hg1fg")
+
+[node name="JoystickDisplay" type="MeshInstance2D" parent="."]
+position = Vector2(52, 52)
+mesh = SubResource("SphereMesh_ykmvx")
+
+[node name="JoystickEdges" type="MeshInstance2D" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(52, 52)
+mesh = SubResource("SphereMesh_uwtvk")
+
+[node name="Button_Left" type="MeshInstance2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(26, 52)
+scale = Vector2(26, 26)
+mesh = SubResource("BoxMesh_0ljwv")
+
+[node name="Button_Up" type="MeshInstance2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(52, 26)
+scale = Vector2(26, 26)
+mesh = SubResource("BoxMesh_0ljwv")
+
+[node name="Button_Down" type="MeshInstance2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(52, 78)
+scale = Vector2(26, 26)
+mesh = SubResource("BoxMesh_0ljwv")
+
+[node name="Button_Right" type="MeshInstance2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(78, 52)
+scale = Vector2(26, 26)
+mesh = SubResource("BoxMesh_0ljwv")
+
+[node name="StateTimer" type="Label" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 78.0
+offset_right = 94.0
+offset_bottom = 104.0
+text = "1000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WhichSide" type="Label" parent="."]
+layout_mode = 0
+offset_left = 118.0
+offset_top = 78.0
+offset_right = 273.0
+offset_bottom = 104.0
+text = "facing_right"
+vertical_alignment = 1
+
+[node name="Button_A" type="MeshInstance2D" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(130, 52)
+scale = Vector2(26, 26)
+mesh = SubResource("BoxMesh_0ljwv")
+
+[node name="Button_B" type="MeshInstance2D" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(169, 52)
+scale = Vector2(26, 26)
+mesh = SubResource("BoxMesh_0ljwv")
+
+[node name="Button_C" type="MeshInstance2D" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(208, 52)
+scale = Vector2(26, 26)
+mesh = SubResource("BoxMesh_0ljwv")
+
+[node name="Button_D" type="MeshInstance2D" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+position = Vector2(247, 52)
+scale = Vector2(26, 26)
+mesh = SubResource("BoxMesh_0ljwv")

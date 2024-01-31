@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://davq5b50p2or8"]
+
+[ext_resource type="Script" path="res://Characters/Common/hitbox.gd" id="1_4chl1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2jv22"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_213gt"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 0.501961)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k7ts2"]
+material = SubResource("StandardMaterial3D_213gt")
+
+[node name="Hitbox" type="Area3D"]
+script = ExtResource("1_4chl1")
+
+[node name="Hitbox Shape" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_2jv22")
+
+[node name="HitboxVisualizer" type="MeshInstance3D" parent="."]
+layers = 2
+mesh = SubResource("BoxMesh_k7ts2")

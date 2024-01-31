@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PlayerControls" load_steps=2 format=3 uid="uid://b41lpsmkf5wgf"]
+
+[ext_resource type="Script" path="res://battle/PlayerControls.gd" id="1_s7fnn"]
+
+[resource]
+script = ExtResource("1_s7fnn")
+player_index = 0
+Input_Left = "P1_Input_Left"
+Input_Right = "P1_Input_Right"
+Input_Up = "P1_Input_Up"
+Input_Up_Alt = "P1_Input_Up_Alt"
+Input_Down = "P1_Input_Down"
+Input_Button_A = "P1_Input_Button_A"
+Input_Button_B = "P1_Input_Button_B"
+Input_Button_C = "P1_Input_Button_C"
+Input_Button_D = "P1_Input_Button_D"
